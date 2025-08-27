@@ -37,8 +37,34 @@ def login_form(authenticator):
 
         if user_register:
             st.session_state['user_register'] = True
-            st.rerun
+            st.rerun()
 
+def confirm_msg():
+    hashed_password = stauth.Hasher([st.session_state.pswrd]).generate()
+    if st.session_state.pswrd != st.session_state.confirm_pswrd:
+        st.warning("Senhas não confere")
+
+    elif 'consulta_nome()':
+            st.warning('Nome de usuario já ecxistem. ')
+    else:
+        'add_registro()'
+        st.success('Registro Efetuado com Sucesso')
+
+def register_user_form():
+    with st.form(key='formulario', clear_on_submit=True):
+        nome = st.text_input('Nome', key='nome')
+        username = st.text_input('Usuário', key='user')
+        password = st.text_input('Senha', key='pswrd', type='password')
+        confirm_password = st.text_input('Confirme a Senha', key='confirm_paswrd', type='confirm_pswrd')
+        submit = st.form_submit_button(
+            'Registrar', on_click=confirm_msg,
+
+        )
+
+        clicou_fazer_login = st.button('Fazer Login')
+        if clicou_fazer_login:
+            st.session_state['user_register'] = False
+            st.rerun()
 
 
 if __name__ == '__main__':
