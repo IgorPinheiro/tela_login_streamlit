@@ -18,9 +18,11 @@ def main():
     
     if st.session_state['user_register'] == False:
         login_form(authenticator=authenticator)
+    else:
+        register_user_form()
 
 
-
+st.title('Sejam bem Vindo ao DashBoad da Engenharia')
 def login_form(authenticator):
     name, authentication_status, username = authenticator.login("login")
    
@@ -32,9 +34,10 @@ def login_form(authenticator):
 
     if authentication_status == False:
         st.error('Usuário/senha incorreto')
+        
 
     if authentication_status == None:
-        st.warning('Sejam bem Vindo ao Dash Boad da Engenharia')
+        st.warning('Sejam bem Vindo ao DashBoad da Engenharia')
         user_register = st.button('Registrar')
 
         if user_register:
@@ -63,10 +66,10 @@ def register_user_form():
 
         )
 
-        clicou_fazer_login = st.button('Fazer Login')
-        if clicou_fazer_login:
-            st.session_state['user_register'] = False
-            st.rerun()
+    clicou_fazer_login = st.button('Fazer Login')
+    if clicou_fazer_login:
+        st.session_state['user_register'] = False
+        st.rerun()
 
 
 if __name__ == '__main__':
