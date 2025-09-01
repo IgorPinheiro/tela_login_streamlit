@@ -1,12 +1,4 @@
 streamlit==1.49.0
-<<<<<<< HEAD
 streamlit_authenticator==0.2.3
 psycopg2==2.9.10
 python-dotenv==1.1.1
-=======
-streamlit_authenticator=0.2.3
-psycopg2==2.9.10
-python-dotenv==1.1.1
-
-#pip install -r .\requiements.txt
->>>>>>> 96d07171abbba24728c42e5c0596318c94842b58
