@@ -1,5 +1,6 @@
 import streamlit as st
 import streamlit_authenticator as stauth
+from dependencies import consulta_nome, consulta_geral
 
 COOKIE_EXPIRY_DAYS = 30
 
@@ -49,7 +50,7 @@ def confirm_msg():
     if st.session_state.pswrd != st.session_state.confirm_pswrd:
         st.warning("Senhas não confere")
 
-    elif 'consulta_nome()':
+    elif consulta_nome():
             st.warning('Nome de usuario já ecxistem. ')
     else:
         'add_registro()'
