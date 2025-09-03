@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login com Partículas Interativas</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: Arial, sans-serif;
+        }
+
+        body {
+            background: #0a0a0a;
+            overflow: hidden;
+        }
+
+        .background {
+            position: fixed;
+            width: 100%;
+            height: 100%;
+            background: url('sua-imagem.jpg') no-repeat center center/cover;
+            z-index: -1;
+        }
+
+        canvas {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 0;
+        }
+
+        .login-container {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: rgba(0, 0, 0, 0.7);
+            padding: 20px;
+            border-radius: 10px;
+            text-align: center;
+            box-shadow: 0 0 10px rgba(255, 255, 255, 0.2);
+            z-index: 1;
+            width: 300px;
+        }
+
+        .login-container h2 {
+            color: #fff;
+            margin-bottom: 20px;
+        }
+
+        .login-container input {
+            width: 100%;
+            padding: 10px;
+            margin: 10px 0;
+            border: none;
+            border-radius: 5px;
+        }
+
+        .login-container input[type="text"],
+        .login-container input[type="password"] {
+            background: #222;
+            color: #fff;
+        }
+
+        .login-container button {
+            width: 100%;
+            padding: 10px;
+            border: none;
+            border-radius: 5px;
+            background: #1e90ff;
+            color: #fff;
+            font-size: 16px;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+
+        .login-container button:hover {
+            background: #0d6efd;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="background"></div>
+
+    <!-- <div class="login-container">
+        <h2>Login</h2>
+        <input type="text" placeholder="Usuário">
+        <input type="password" placeholder="Senha">
+        <button>Entrar</button>
+    </div> -->
+
+    <canvas id="particles"></canvas>
+
+    <script>
+        const canvas = document.getElementById("particles");
+        const ctx = canvas.getContext("2d");
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+
+        const particles = [];
+        const mouse = { x: null, y: null, radius: 150 };
+
+        window.addEventListener("mousemove", (event) => {
+            mouse.x = event.x;
+            mouse.y = event.y;
+        });
+
+        window.addEventListener("resize", () => {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+            initParticles();
+        });
+
+        window.addEventListener("click", (event) => {
+            for (let i = 0; i < 5; i++) {
+                const x = event.x + (Math.random() * 50 - 25);
+                const y = event.y + (Math.random() * 50 - 25);
+                particles.push(new Particle(x, y, true));
+            }
+        });
+
+        class Particle {
+            constructor(x, y, isFloating = false) {
+                this.x = x;
+                this.y = y;
+                this.size = 2;  // 🔹 Pontos menores
+                this.isFloating = isFloating;
+                this.vx = (Math.random() - 0.5) * 0.5;  // 🔹 Movimento lento
+                this.vy = (Math.random() - 0.5) * 0.5;
+            }
+
+            move() {
+                this.x += this.vx;
+                this.y += this.vy;
+
+                if (this.x < 0 || this.x > canvas.width) this.vx *= -1;
+                if (this.y < 0 || this.y > canvas.height) this.vy *= -1;
+            }
+
+            draw() {
+                ctx.fillStyle = "white";
+                ctx.beginPath();
+                ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+                ctx.fill();
+            }
+        }
+
+        function initParticles() {
+            particles.length = 0;
+            for (let i = 0; i < 50; i++) {
+                const x = Math.random() * canvas.width;
+                const y = Math.random() * canvas.height;
+                particles.push(new Particle(x, y));
+            }
+        }
+
+        function drawLines() {
+            for (let i = 0; i < particles.length; i++) {
+                let dxMouse = particles[i].x - mouse.x;
+                let dyMouse = particles[i].y - mouse.y;
+                let distanceMouse = Math.sqrt(dxMouse * dxMouse + dyMouse * dyMouse);
+
+                if (distanceMouse < mouse.radius) {
+                    ctx.strokeStyle = `rgba(255, 255, 255, ${1 - distanceMouse / mouse.radius})`;
+                    ctx.lineWidth = 1.5;
+                    ctx.beginPath();
+                    ctx.moveTo(particles[i].x, particles[i].y);
+                    ctx.lineTo(mouse.x, mouse.y);
+                    ctx.stroke();
+                }
+
+                for (let j = i + 1; j < particles.length; j++) {
+                    let dx = particles[i].x - particles[j].x;
+                    let dy = particles[i].y - particles[j].y;
+                    let distance = Math.sqrt(dx * dx + dy * dy);
+
+                    if (distance < 100) {
+                        ctx.strokeStyle = `rgba(255, 255, 255, ${1 - distance / 100})`;
+                        ctx.lineWidth = 1;
+                        ctx.beginPath();
+                        ctx.moveTo(particles[i].x, particles[i].y);
+                        ctx.lineTo(particles[j].x, particles[j].y);
+                        ctx.stroke();
+                    }
+                }
+            }
+        }
+
+        function animate() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+            for (let particle of particles) {
+                particle.move();
+                particle.draw();
+            }
+
+            drawLines();
+            requestAnimationFrame(animate);
+        }
+
+        initParticles();
+        animate();
+    </script>
+</body>
+</html>

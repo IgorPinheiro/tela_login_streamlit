@@ -1,7 +1,10 @@
 import streamlit as st
 import streamlit_authenticator as stauth
+from streamlit.components.v1 import html
 from dependencies import consulta_nome, consulta_geral, add_registro, cria_tabela
 from time import sleep
+
+st.set_page_config(layout="wide", page_title='Engenharia', page_icon="style\\image.png")
 
 COOKIE_EXPIRY_DAYS = 30
 
@@ -40,7 +43,7 @@ def login_form(authenticator):
     name, authentication_status, username = authenticator.login("login")
    
     if authentication_status:
-        authenticator.logout('Logout', main)
+        authenticator.logout('Logout', 'main')
         st.title('Bem Vindo')
         st.write(f'Bem vindo: *{name}!')
 
