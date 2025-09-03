@@ -27,7 +27,7 @@ def instance_cursor():
 def consulta_geral():
     with instance_cursor() as cursor:
         query = '''
-        SELECT * FROM REGISTROS
+        SELECT * FROM REGISTRO
         '''
         cursor.execute(query, )
         request = cursor.fetchall() # Fetchall pega tudo do excute, devolve todo o que achar.
@@ -47,10 +47,10 @@ def cria_tabela():
     cursor = connection.cursor()
 
     query = '''
-        CREATE TABLE REGISTRO (
+        CREATE TABLE REGISTRO(
             nome varchar (30),
             usuario varchar (30),
-            senha varchar (100),
+            senha varchar (100)
         )
         '''
     cursor.execute(query)
@@ -66,7 +66,7 @@ def add_registro(nome, user, senha):
     cursor = connection.cursor()
 
     query = f'''
-        INSERT INTO REGISTROS VALUES
+        INSERT INTO REGISTRO VALUES
         {nome, user, senha}
         '''
     cursor.execute(query)
@@ -76,4 +76,3 @@ def add_registro(nome, user, senha):
         cursor.close()
         connection.close()
         print("Conexão com PostgreSQL Encerrada")
-        
